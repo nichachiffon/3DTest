@@ -55,24 +55,26 @@ const Machine3D = ({ machine, isSelected, onClick }: { machine: Machine; isSelec
     }
   };
 
+  const isLightGrayMachine = machine.id === 'M-A';
+
   // Injection Molding Machine - ปรับปรุงให้สวยงามและมีสีสันมากขึ้น
   const InjectionMachine = () => (
     <group>
       {/* Main Machine Body - เพิ่มสีสันและเอฟเฟกต์ */}
       <mesh position={[0, 0, 0]}>
-        <boxGeometry args={[3.5, 2, 4]} />
+        <boxGeometry args={[4.2, 2.4, 4.8]} />
         <meshStandardMaterial 
-          color="#1e293b" 
+          color={isLightGrayMachine ? '#e5e7eb' : '#1f2937'}
           metalness={0.8} 
           roughness={0.2}
-          emissive="#334155"
-          emissiveIntensity={machine.status === 'ALARM' ? 0.3 : 0.1}
+          emissive={isLightGrayMachine ? '#000000' : '#111827'}
+          emissiveIntensity={isLightGrayMachine ? 0 : 0.05}
         />
       </mesh>
       
       {/* Decorative Stripes */}
       <mesh position={[0, 0.8, 0]}>
-        <boxGeometry args={[3.6, 0.1, 4.1]} />
+        <boxGeometry args={[4.3, 0.12, 4.9]} />
         <meshStandardMaterial 
           color="#3b82f6" 
           emissive="#3b82f6" 
@@ -81,7 +83,7 @@ const Machine3D = ({ machine, isSelected, onClick }: { machine: Machine; isSelec
       </mesh>
       
       <mesh position={[0, -0.8, 0]}>
-        <boxGeometry args={[3.6, 0.1, 4.1]} />
+        <boxGeometry args={[4.3, 0.12, 4.9]} />
         <meshStandardMaterial 
           color="#8b5cf6" 
           emissive="#8b5cf6" 
@@ -90,46 +92,46 @@ const Machine3D = ({ machine, isSelected, onClick }: { machine: Machine; isSelec
       </mesh>
       
       {/* Injection Unit - ปรับปรุงสีและเอฟเฟกต์ */}
-      <mesh position={[0, 1.2, -2]}>
-        <cylinderGeometry args={[0.3, 0.3, 1.5, 12]} />
+      <mesh position={[0, 1.2, -2.4]}>
+        <cylinderGeometry args={[0.36, 0.36, 1.8, 16]} />
         <meshStandardMaterial 
-          color="#475569" 
+          color="#6b7280" 
           metalness={0.9} 
           roughness={0.1}
-          emissive="#64748b"
-          emissiveIntensity={machine.status === 'ALARM' ? 0.6 : 0.2}
+          emissive="#111827"
+          emissiveIntensity={0.05}
         />
       </mesh>
       
       {/* Mold Clamp - เพิ่มสีสัน */}
-      <mesh position={[0, 0, 2]}>
-        <boxGeometry args={[3, 1.8, 0.5]} />
+      <mesh position={[0, 0, 2.4]}>
+        <boxGeometry args={[3.6, 2.2, 0.6]} />
         <meshStandardMaterial 
-          color="#0f172a" 
+          color={isLightGrayMachine ? '#cbd5e1' : '#111827'}
           metalness={0.7} 
           roughness={0.3}
-          emissive="#1e293b"
-          emissiveIntensity={machine.status === 'ALARM' ? 0.4 : 0.1}
+          emissive="#000000"
+          emissiveIntensity={0}
         />
       </mesh>
       
       {/* Control Panel - ปรับปรุงให้สวยงาม */}
-      <mesh position={[1.3, 0.3, 0]}>
-        <boxGeometry args={[0.2, 0.8, 1.5]} />
+      <mesh position={[1.6, 0.4, 0]}>
+        <boxGeometry args={[0.24, 1.0, 1.8]} />
         <meshStandardMaterial 
-          color="#0f172a" 
+          color={isLightGrayMachine ? '#d1d5db' : '#111827'}
           metalness={0.6} 
           roughness={0.4}
-          emissive="#1e293b"
-          emissiveIntensity={machine.status === 'ALARM' ? 0.4 : 0.1}
+          emissive="#000000"
+          emissiveIntensity={0}
         />
       </mesh>
       
       {/* Display Screen - เพิ่มเอฟเฟกต์แสง */}
-      <mesh position={[1.3, 0.3, 0]}>
-        <boxGeometry args={[0.05, 0.5, 1.2]} />
+      <mesh position={[1.6, 0.4, 0]}>
+        <boxGeometry args={[0.06, 0.6, 1.4]} />
         <meshStandardMaterial 
-          color="#000000" 
+          color="#ffffff" 
           emissive="#1e40af" 
           emissiveIntensity={machine.status === 'ALARM' ? 1.2 : 0.8}
         />
@@ -141,13 +143,13 @@ const Machine3D = ({ machine, isSelected, onClick }: { machine: Machine; isSelec
         <meshStandardMaterial 
           color={getMachineColor()} 
           emissive={getMachineEmissive()} 
-          emissiveIntensity={getMachineGlowIntensity()}
+          emissiveIntensity={0.5}
         />
       </mesh>
       
       {/* Hydraulic Pipes - เพิ่มสีสัน */}
-      <mesh position={[0.6, 0.3, 0]}>
-        <cylinderGeometry args={[0.04, 0.04, 0.8, 12]} />
+      <mesh position={[0.75, 0.35, 0]}>
+        <cylinderGeometry args={[0.05, 0.05, 1.0, 16]} />
         <meshStandardMaterial 
           color="#dc2626" 
           metalness={0.9} 
@@ -158,8 +160,8 @@ const Machine3D = ({ machine, isSelected, onClick }: { machine: Machine; isSelec
       </mesh>
       
       {/* Cooling System - ปรับปรุงสี */}
-      <mesh position={[-0.8, 0, 0]}>
-        <boxGeometry args={[0.4, 1.2, 2.5]} />
+      <mesh position={[-1.0, 0, 0]}>
+        <boxGeometry args={[0.5, 1.5, 3.0]} />
         <meshStandardMaterial 
           color="#1d4ed8" 
           metalness={0.7} 
@@ -171,8 +173,8 @@ const Machine3D = ({ machine, isSelected, onClick }: { machine: Machine; isSelec
       
       {/* Ventilation Grills - เพิ่มสีสัน */}
       {[...Array(4)].map((_, i) => (
-        <mesh key={i} position={[-1, -0.4 + i * 0.4, 0]}>
-          <boxGeometry args={[0.08, 0.08, 1.8]} />
+        <mesh key={i} position={[-1.2, -0.5 + i * 0.45, 0]}>
+          <boxGeometry args={[0.1, 0.1, 2.2]} />
           <meshStandardMaterial 
             color="#475569" 
             metalness={0.6} 
@@ -202,7 +204,7 @@ const Machine3D = ({ machine, isSelected, onClick }: { machine: Machine; isSelec
     <group>
       {/* Machine Base - เพิ่มสีสันและเอฟเฟกต์ */}
       <mesh position={[0, 0, 0]}>
-        <boxGeometry args={[4, 0.4, 4]} />
+        <boxGeometry args={[4.8, 0.5, 4.8]} />
         <meshStandardMaterial 
           color="#1e293b" 
           metalness={0.8} 
@@ -213,8 +215,8 @@ const Machine3D = ({ machine, isSelected, onClick }: { machine: Machine; isSelec
       </mesh>
       
       {/* Decorative Stripes */}
-      <mesh position={[0, 0.2, 0]}>
-        <boxGeometry args={[4.1, 0.05, 4.1]} />
+      <mesh position={[0, 0.25, 0]}>
+        <boxGeometry args={[4.9, 0.06, 4.9]} />
         <meshStandardMaterial 
           color="#06b6d4" 
           emissive="#06b6d4" 
@@ -223,8 +225,8 @@ const Machine3D = ({ machine, isSelected, onClick }: { machine: Machine; isSelec
       </mesh>
       
       {/* X-Axis Rails - ปรับปรุงสี */}
-      <mesh position={[0, 0.2, -1.8]}>
-        <boxGeometry args={[3.8, 0.2, 0.3]} />
+      <mesh position={[0, 0.25, -2.2]}>
+        <boxGeometry args={[4.4, 0.24, 0.36]} />
         <meshStandardMaterial 
           color="#475569" 
           metalness={0.9} 
@@ -234,8 +236,8 @@ const Machine3D = ({ machine, isSelected, onClick }: { machine: Machine; isSelec
         />
       </mesh>
       
-      <mesh position={[0, 0.2, 1.8]}>
-        <boxGeometry args={[3.8, 0.2, 0.3]} />
+      <mesh position={[0, 0.25, 2.2]}>
+        <boxGeometry args={[4.4, 0.24, 0.36]} />
         <meshStandardMaterial 
           color="#475569" 
           metalness={0.9} 
@@ -246,8 +248,8 @@ const Machine3D = ({ machine, isSelected, onClick }: { machine: Machine; isSelec
       </mesh>
       
       {/* Y-Axis Carriage - เพิ่มสีสัน */}
-      <mesh position={[0, 0.4, 0]}>
-        <boxGeometry args={[0.8, 0.3, 3.2]} />
+      <mesh position={[0, 0.5, 0]}>
+        <boxGeometry args={[1.0, 0.36, 3.8]} />
         <meshStandardMaterial 
           color="#0f172a" 
           metalness={0.7} 
@@ -258,8 +260,8 @@ const Machine3D = ({ machine, isSelected, onClick }: { machine: Machine; isSelec
       </mesh>
       
       {/* Z-Axis Spindle - ปรับปรุงสี */}
-      <mesh position={[0, 1.4, 0]}>
-        <cylinderGeometry args={[0.2, 0.2, 1.5, 12]} />
+      <mesh position={[0, 1.6, 0]}>
+        <cylinderGeometry args={[0.24, 0.24, 1.8, 16]} />
         <meshStandardMaterial 
           color="#475569" 
           metalness={0.9} 
@@ -270,8 +272,8 @@ const Machine3D = ({ machine, isSelected, onClick }: { machine: Machine; isSelec
       </mesh>
       
       {/* Spindle Motor - เพิ่มสีสัน */}
-      <mesh position={[0, 2.2, 0]}>
-        <cylinderGeometry args={[0.4, 0.4, 0.4, 12]} />
+      <mesh position={[0, 2.5, 0]}>
+        <cylinderGeometry args={[0.48, 0.48, 0.48, 16]} />
         <meshStandardMaterial 
           color="#0f172a" 
           metalness={0.8} 
@@ -282,8 +284,8 @@ const Machine3D = ({ machine, isSelected, onClick }: { machine: Machine; isSelec
       </mesh>
       
       {/* Cutting Tool - เพิ่มเอฟเฟกต์แสง */}
-      <mesh position={[0, 0.3, 0]}>
-        <cylinderGeometry args={[0.015, 0.015, 0.2, 8]} />
+      <mesh position={[0, 0.35, 0]}>
+        <cylinderGeometry args={[0.018, 0.018, 0.24, 12]} />
         <meshStandardMaterial 
           color="#fbbf24" 
           metalness={1} 
@@ -294,8 +296,8 @@ const Machine3D = ({ machine, isSelected, onClick }: { machine: Machine; isSelec
       </mesh>
       
       {/* Work Table - ปรับปรุงสี */}
-      <mesh position={[0, 0.1, 0]}>
-        <boxGeometry args={[3.5, 0.1, 3.5]} />
+      <mesh position={[0, 0.12, 0]}>
+        <boxGeometry args={[4.2, 0.12, 4.2]} />
         <meshStandardMaterial 
           color="#64748b" 
           metalness={0.6} 
@@ -307,8 +309,8 @@ const Machine3D = ({ machine, isSelected, onClick }: { machine: Machine; isSelec
       
       {/* T-Slots - เพิ่มสีสัน */}
       {[...Array(3)].map((_, i) => (
-        <mesh key={i} position={[-0.8 + i * 0.8, 0.05, 0]}>
-          <boxGeometry args={[0.08, 0.03, 2]} />
+        <mesh key={i} position={[-1.0 + i * 1.0, 0.06, 0]}>
+          <boxGeometry args={[0.1, 0.04, 2.4]} />
           <meshStandardMaterial 
             color="#0f172a" 
             metalness={0.5} 
@@ -320,8 +322,8 @@ const Machine3D = ({ machine, isSelected, onClick }: { machine: Machine; isSelec
       ))}
       
       {/* Control Panel - ปรับปรุงให้สวยงาม */}
-      <mesh position={[1.6, 0.3, 0]}>
-        <boxGeometry args={[0.3, 0.7, 1.5]} />
+      <mesh position={[2.0, 0.4, 0]}>
+        <boxGeometry args={[0.36, 0.84, 1.8]} />
         <meshStandardMaterial 
           color="#0f172a" 
           metalness={0.6} 
@@ -332,18 +334,18 @@ const Machine3D = ({ machine, isSelected, onClick }: { machine: Machine; isSelec
       </mesh>
       
       {/* Display - เพิ่มเอฟเฟกต์แสง */}
-      <mesh position={[1.6, 0.3, 0]}>
-        <boxGeometry args={[0.05, 0.5, 1.2]} />
+      <mesh position={[2.0, 0.4, 0]}>
+        <boxGeometry args={[0.06, 0.6, 1.4]} />
         <meshStandardMaterial 
-          color="#000000" 
+          color="#ffffff" 
           emissive="#0891b2" 
           emissiveIntensity={machine.status === 'ALARM' ? 1.2 : 0.8}
         />
       </mesh>
       
       {/* Emergency Stop Button - เพิ่มสีสัน */}
-      <mesh position={[1.6, 0.1, 0.6]}>
-        <cylinderGeometry args={[0.08, 0.08, 0.08, 12]} />
+      <mesh position={[2.0, 0.12, 0.7]}>
+        <cylinderGeometry args={[0.096, 0.096, 0.096, 16]} />
         <meshStandardMaterial 
           color="#dc2626" 
           emissive="#dc2626" 
@@ -380,7 +382,7 @@ const Machine3D = ({ machine, isSelected, onClick }: { machine: Machine; isSelec
     <group>
       {/* Main Conveyor Belt - เพิ่มสีสันและเอฟเฟกต์ */}
       <mesh position={[0, 0, 0]}>
-        <boxGeometry args={[3.5, 0.3, 4]} />
+        <boxGeometry args={[4.2, 0.36, 4.8]} />
         <meshStandardMaterial 
           color="#1e293b" 
           metalness={0.7} 
@@ -391,8 +393,8 @@ const Machine3D = ({ machine, isSelected, onClick }: { machine: Machine; isSelec
       </mesh>
       
       {/* Decorative Stripes */}
-      <mesh position={[0, 0.15, 0]}>
-        <boxGeometry args={[3.6, 0.02, 4.1]} />
+      <mesh position={[0, 0.18, 0]}>
+        <boxGeometry args={[4.3, 0.024, 4.9]} />
         <meshStandardMaterial 
           color="#10b981" 
           emissive="#10b981" 
@@ -402,8 +404,8 @@ const Machine3D = ({ machine, isSelected, onClick }: { machine: Machine; isSelec
       
       {/* Conveyor Rollers - ปรับปรุงสี */}
       {[...Array(8)].map((_, i) => (
-        <mesh key={i} position={[-1.4 + i * 0.35, 0.15, 0]}>
-          <cylinderGeometry args={[0.1, 0.1, 3.8, 12]} />
+        <mesh key={i} position={[-1.7 + i * 0.42, 0.18, 0]}>
+          <cylinderGeometry args={[0.12, 0.12, 4.6, 16]} />
           <meshStandardMaterial 
             color="#64748b" 
             metalness={0.8} 
@@ -415,8 +417,8 @@ const Machine3D = ({ machine, isSelected, onClick }: { machine: Machine; isSelec
       ))}
       
       {/* Assembly Station 1 - Welding - เพิ่มสีสัน */}
-      <mesh position={[-0.6, 0.4, 0]}>
-        <boxGeometry args={[0.8, 0.8, 0.8]} />
+      <mesh position={[-0.72, 0.48, 0]}>
+        <boxGeometry args={[0.96, 0.96, 0.96]} />
         <meshStandardMaterial 
           color="#0f172a" 
           metalness={0.6} 
@@ -427,8 +429,8 @@ const Machine3D = ({ machine, isSelected, onClick }: { machine: Machine; isSelec
       </mesh>
       
       {/* Welding Arm - ปรับปรุงสี */}
-      <mesh position={[-0.4, 0.8, 0]}>
-        <cylinderGeometry args={[0.04, 0.04, 0.6, 8]} />
+      <mesh position={[-0.48, 0.96, 0]}>
+        <cylinderGeometry args={[0.048, 0.048, 0.72, 12]} />
         <meshStandardMaterial 
           color="#0f172a" 
           metalness={0.9} 
@@ -439,8 +441,8 @@ const Machine3D = ({ machine, isSelected, onClick }: { machine: Machine; isSelec
       </mesh>
       
       {/* Welding Tip - เพิ่มเอฟเฟกต์แสง */}
-      <mesh position={[-0.4, 1.2, 0]}>
-        <coneGeometry args={[0.015, 0.08, 8]} />
+      <mesh position={[-0.48, 1.44, 0]}>
+        <coneGeometry args={[0.018, 0.096, 12]} />
         <meshStandardMaterial 
           color="#f97316" 
           emissive="#f97316" 
@@ -449,8 +451,8 @@ const Machine3D = ({ machine, isSelected, onClick }: { machine: Machine; isSelec
       </mesh>
       
       {/* Assembly Station 2 - Screwing - เพิ่มสีสัน */}
-      <mesh position={[0.6, 0.4, 0]}>
-        <boxGeometry args={[0.8, 0.8, 0.8]} />
+      <mesh position={[0.72, 0.48, 0]}>
+        <boxGeometry args={[0.96, 0.96, 0.96]} />
         <meshStandardMaterial 
           color="#0f172a" 
           metalness={0.6} 
@@ -461,8 +463,8 @@ const Machine3D = ({ machine, isSelected, onClick }: { machine: Machine; isSelec
       </mesh>
       
       {/* Screw Driver - ปรับปรุงสี */}
-      <mesh position={[0.4, 0.8, 0]}>
-        <cylinderGeometry args={[0.025, 0.025, 0.5, 8]} />
+      <mesh position={[0.48, 0.96, 0]}>
+        <cylinderGeometry args={[0.03, 0.03, 0.6, 12]} />
         <meshStandardMaterial 
           color="#0f172a" 
           metalness={0.9} 
@@ -473,8 +475,8 @@ const Machine3D = ({ machine, isSelected, onClick }: { machine: Machine; isSelec
       </mesh>
       
       {/* Screw Bit - เพิ่มเอฟเฟกต์แสง */}
-      <mesh position={[0.4, 1.1, 0]}>
-        <cylinderGeometry args={[0.008, 0.008, 0.08, 6]} />
+      <mesh position={[0.48, 1.32, 0]}>
+        <cylinderGeometry args={[0.01, 0.01, 0.1, 8]} />
         <meshStandardMaterial 
           color="#fbbf24" 
           metalness={1} 
@@ -485,8 +487,8 @@ const Machine3D = ({ machine, isSelected, onClick }: { machine: Machine; isSelec
       </mesh>
       
       {/* Assembly Station 3 - Quality Check - เพิ่มสีสัน */}
-      <mesh position={[0, 0.4, 1.5]}>
-        <boxGeometry args={[0.8, 0.8, 0.8]} />
+      <mesh position={[0, 0.48, 1.8]}>
+        <boxGeometry args={[0.96, 0.96, 0.96]} />
         <meshStandardMaterial 
           color="#0f172a" 
           metalness={0.6} 
@@ -497,18 +499,18 @@ const Machine3D = ({ machine, isSelected, onClick }: { machine: Machine; isSelec
       </mesh>
       
       {/* Camera Sensor - ปรับปรุงสี */}
-      <mesh position={[0, 0.8, 1.2]}>
-        <cylinderGeometry args={[0.08, 0.08, 0.15, 12]} />
+      <mesh position={[0, 0.96, 1.44]}>
+        <cylinderGeometry args={[0.096, 0.096, 0.18, 16]} />
         <meshStandardMaterial 
-          color="#000000" 
+          color="#ffffff" 
           emissive="#1e293b" 
           emissiveIntensity={machine.status === 'ALARM' ? 0.8 : 0.3}
         />
       </mesh>
       
       {/* Lens - เพิ่มเอฟเฟกต์แสง */}
-      <mesh position={[0, 0.9, 1.2]}>
-        <sphereGeometry args={[0.04, 16, 16]} />
+      <mesh position={[0, 1.08, 1.44]}>
+        <sphereGeometry args={[0.048, 20, 20]} />
         <meshStandardMaterial 
           color="#1d4ed8" 
           emissive="#1d4ed8" 
@@ -517,8 +519,8 @@ const Machine3D = ({ machine, isSelected, onClick }: { machine: Machine; isSelec
       </mesh>
       
       {/* Control Panel - ปรับปรุงให้สวยงาม */}
-      <mesh position={[1.2, 0.3, 0]}>
-        <boxGeometry args={[0.2, 0.7, 1.5]} />
+      <mesh position={[1.44, 0.36, 0]}>
+        <boxGeometry args={[0.24, 0.84, 1.8]} />
         <meshStandardMaterial 
           color="#0f172a" 
           metalness={0.6} 
@@ -529,18 +531,18 @@ const Machine3D = ({ machine, isSelected, onClick }: { machine: Machine; isSelec
       </mesh>
       
       {/* Display Screen - เพิ่มเอฟเฟกต์แสง */}
-      <mesh position={[1.2, 0.3, 0]}>
-        <boxGeometry args={[0.05, 0.5, 1.2]} />
+      <mesh position={[1.44, 0.36, 0]}>
+        <boxGeometry args={[0.06, 0.6, 1.4]} />
         <meshStandardMaterial 
-          color="#000000" 
+          color="#ffffff" 
           emissive="#059669" 
           emissiveIntensity={machine.status === 'ALARM' ? 1.2 : 0.8}
         />
       </mesh>
       
       {/* Status Indicators - เพิ่มสีสันตามสถานะ */}
-      <mesh position={[0, 1.6, 0]}>
-        <sphereGeometry args={[0.06, 16, 16]} />
+      <mesh position={[0, 1.92, 0]}>
+        <sphereGeometry args={[0.072, 20, 20]} />
         <meshStandardMaterial 
           color={getMachineColor()} 
           emissive={getMachineEmissive()} 
@@ -549,8 +551,8 @@ const Machine3D = ({ machine, isSelected, onClick }: { machine: Machine; isSelec
       </mesh>
       
       {/* LED Ring */}
-      <mesh position={[0, 1.6, 0]}>
-        <ringGeometry args={[0.1, 0.16, 16]} />
+      <mesh position={[0, 1.92, 0]}>
+        <ringGeometry args={[0.12, 0.2, 20]} />
         <meshStandardMaterial 
           color={getMachineColor()} 
           emissive={getMachineEmissive()} 
@@ -561,8 +563,8 @@ const Machine3D = ({ machine, isSelected, onClick }: { machine: Machine; isSelec
       </mesh>
       
       {/* Safety Guards - เพิ่มสีสัน */}
-      <mesh position={[0, 0.5, -1.2]}>
-        <boxGeometry args={[2, 0.08, 0.08]} />
+      <mesh position={[0, 0.6, -1.44]}>
+        <boxGeometry args={[2.4, 0.096, 0.096]} />
         <meshStandardMaterial 
           color="#dc2626" 
           metalness={0.5} 
@@ -572,8 +574,8 @@ const Machine3D = ({ machine, isSelected, onClick }: { machine: Machine; isSelec
         />
       </mesh>
       
-      <mesh position={[0, 0.5, 1.2]}>
-        <boxGeometry args={[2, 0.08, 0.08]} />
+      <mesh position={[0, 0.6, 1.44]}>
+        <boxGeometry args={[2.4, 0.096, 0.096]} />
         <meshStandardMaterial 
           color="#dc2626" 
           metalness={0.5} 
@@ -609,8 +611,8 @@ const Machine3D = ({ machine, isSelected, onClick }: { machine: Machine; isSelec
       {renderMachine()}
 
       {/* Enhanced Status Indicator */}
-      <mesh position={[0, 2.8, 0]}>
-        <sphereGeometry args={[0.15, 16, 16]} />
+        <mesh position={[0, 3.2, 0]}>
+          <sphereGeometry args={[0.18, 20, 20]} />
         <meshStandardMaterial 
           color={getMachineColor()} 
           emissive={getMachineEmissive()} 
@@ -619,8 +621,8 @@ const Machine3D = ({ machine, isSelected, onClick }: { machine: Machine; isSelec
       </mesh>
 
       {/* Status Ring */}
-      <mesh position={[0, 2.8, 0]}>
-        <ringGeometry args={[0.2, 0.3, 16]} />
+        <mesh position={[0, 3.2, 0]}>
+          <ringGeometry args={[0.24, 0.36, 20]} />
         <meshStandardMaterial 
           color={getMachineColor()} 
           emissive={getMachineEmissive()} 
@@ -631,8 +633,8 @@ const Machine3D = ({ machine, isSelected, onClick }: { machine: Machine; isSelec
       </mesh>
 
       {/* Enhanced Text Display */}
-      <Html position={[0, 3.8, 1.2]} center>
-        <div className="enhanced-text">
+      <Html position={[0, 4.2, 1.6]} center>
+        <div className="enhanced-text" style={{ transform: 'scale(1.15)' }}>
           <div className="machine-name-enhanced">{machine.name}</div>
           <div className="temp-enhanced">{machine.temp.toFixed(1)}°C</div>
           <div className={`status-enhanced ${machine.status.toLowerCase()}`}>
@@ -683,26 +685,26 @@ const Scene3D = ({ machines, selectedMachine, onMachineSelect }: {
 }) => {
   return (
     <Canvas
-      camera={{ position: [0, 9, 16], fov: 45 }}
+      camera={{ position: [0, 9, 16], fov: 42 }}
       dpr={[1, 1.25]}
       frameloop="demand"
       gl={{ antialias: false, powerPreference: 'high-performance' }}
-      style={{ height: '85vh', background: 'transparent' }}
+      style={{ height: '90vh', background: '#1f2937' }}
     >
       <Suspense fallback={null}>
         {/* Simplified Lighting for performance */}
-        <ambientLight intensity={0.6} />
-        <directionalLight position={[10, 10, 5]} intensity={0.8} color="#ffffff" />
+        <ambientLight intensity={0.7} />
+        <directionalLight position={[10, 10, 5]} intensity={0.7} color="#ffffff" />
         
-        {/* Ground Plane */}
+        {/* Ground Plane (neutral gray, matte) */}
         <mesh position={[0, -2, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-          <planeGeometry args={[30, 30]} />
+          <planeGeometry args={[40, 40]} />
           <meshStandardMaterial 
-            color="#0f172a" 
-            metalness={0.1} 
-            roughness={0.8}
-            emissive="#1e293b"
-            emissiveIntensity={0.2}
+            color="#4b5563" 
+            metalness={0.05} 
+            roughness={0.95}
+            emissive="#000000"
+            emissiveIntensity={0}
           />
         </mesh>
 
@@ -738,9 +740,9 @@ const FactoryDashboard = () => {
       status: 'OK', 
       type: 'injection', 
       lastUpdate: new Date(),
-      position: [6, 0, 0],
+      position: [7, 0, 0],
       rotation: [0, 0, 0],
-      scale: [0.9, 0.9, 0.9]
+      scale: [1.1, 1.1, 1.1]
     },
     { 
       id: 'M-B', 
@@ -749,9 +751,9 @@ const FactoryDashboard = () => {
       status: 'OK', 
       type: 'cnc', 
       lastUpdate: new Date(),
-      position: [-6, 0, 0],
+      position: [-7, 0, 0],
       rotation: [0, 0, 0],
-      scale: [0.9, 0.9, 0.9]
+      scale: [1.1, 1.1, 1.1]
     },
     { 
       id: 'M-C', 
@@ -760,9 +762,9 @@ const FactoryDashboard = () => {
       status: 'OK', 
       type: 'assembly', 
       lastUpdate: new Date(),
-      position: [0, 0, 6],
+      position: [0, 0.5, 5],
       rotation: [0, 0, 0],
-      scale: [0.9, 0.9, 0.9]
+      scale: [1.1, 1.1, 1.1]
     }
   ]);
   
