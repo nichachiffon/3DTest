@@ -699,10 +699,12 @@ const Scene3D = ({ machines, selectedMachine, onMachineSelect, visibleIndex }: {
 }) => {
   const isMobile = useIsMobile();
   const cameraSettings = isMobile
-    ? { position: [0, 14, 28] as [number, number, number], fov: 70 }
+    ? { position: [0, 10, 20] as [number, number, number], fov: 50 }
     : { position: [0, 8, 14] as [number, number, number], fov: 40 };
   const canvasHeight = isMobile ? '70vh' : '90vh';
   const dprRange = isMobile ? ([1, 1.05] as [number, number]) : ([1, 1.25] as [number, number]);
+  const safeIndex = Math.min(Math.max((visibleIndex ?? 0), 0), Math.max(machines.length - 1, 0));
+  const mobileMachines = [machines[safeIndex]].filter(Boolean) as Machine[];
   return (
     <Canvas
       camera={cameraSettings}
@@ -713,8 +715,8 @@ const Scene3D = ({ machines, selectedMachine, onMachineSelect, visibleIndex }: {
     >
       <Suspense fallback={null}>
         {/* Simplified Lighting for performance */}
-        <ambientLight intensity={isMobile ? 0.9 : 0.7} />
-        <directionalLight position={[10, 10, 5]} intensity={isMobile ? 0.6 : 0.7} color="#ffffff" />
+        <ambientLight intensity={isMobile ? 1.2 : 0.7} />
+        <directionalLight position={[10, 12, 8]} intensity={isMobile ? 1.0 : 0.8} color="#ffffff" />
         
         {/* Ground Plane (neutral gray, matte) */}
         <mesh position={[0, -2, 0]} rotation={[-Math.PI / 2, 0, 0]}>
@@ -731,13 +733,13 @@ const Scene3D = ({ machines, selectedMachine, onMachineSelect, visibleIndex }: {
         {/* Minimal scene: no extra effects */}
 
         {/* Machines */}
-        {(isMobile && typeof visibleIndex === 'number' ? [machines[visibleIndex]] : machines).map((machine) => (
+        {(isMobile ? mobileMachines : machines).map((machine) => (
           <Machine3D
             key={machine.id}
             machine={{
               ...machine,
-              position: isMobile ? [0, 0, 0] : machine.position,
-              scale: isMobile ? [0.95, 0.95, 0.95] : machine.scale,
+              position: isMobile ? [0, 0.3, 0] : machine.position,
+              scale: isMobile ? [1.15, 1.15, 1.15] : machine.scale,
             }}
             isSelected={selectedMachine === machine.id}
             onClick={() => onMachineSelect(machine.id)}
