@@ -25,7 +25,7 @@ interface MachineData {
 }
 
 // 3D Machine Component
-const Machine3D = ({ machine, isSelected, onClick }: { machine: Machine; isSelected: boolean; onClick: () => void }) => {
+const Machine3D = ({ machine, isSelected, onClick, isMobile = false }: { machine: Machine; isSelected: boolean; onClick: () => void; isMobile?: boolean }) => {
   const meshRef = useRef<THREE.Group>(null);
 
   const getMachineColor = () => {
@@ -611,7 +611,7 @@ const Machine3D = ({ machine, isSelected, onClick }: { machine: Machine; isSelec
       {renderMachine()}
 
       {/* Enhanced Status Indicator */}
-        <mesh position={[0, 3.2, 0]}>
+        <mesh position={[0, isMobile ? 2.6 : 3.2, 0]}>
           <sphereGeometry args={[0.18, 20, 20]} />
         <meshStandardMaterial 
           color={getMachineColor()} 
@@ -621,8 +621,8 @@ const Machine3D = ({ machine, isSelected, onClick }: { machine: Machine; isSelec
       </mesh>
 
       {/* Status Ring */}
-        <mesh position={[0, 3.2, 0]}>
-          <ringGeometry args={[0.24, 0.36, 20]} />
+        <mesh position={[0, isMobile ? 2.6 : 3.2, 0]}>
+          <ringGeometry args={[isMobile ? 0.22 : 0.24, isMobile ? 0.32 : 0.36, 20]} />
         <meshStandardMaterial 
           color={getMachineColor()} 
           emissive={getMachineEmissive()} 
@@ -633,8 +633,8 @@ const Machine3D = ({ machine, isSelected, onClick }: { machine: Machine; isSelec
       </mesh>
 
       {/* Enhanced Text Display */}
-      <Html position={[0, 4.2, 1.6]} center>
-        <div className="enhanced-text" style={{ transform: 'scale(1.15)' }}>
+      <Html position={[0, isMobile ? 3.2 : 4.2, isMobile ? 1.2 : 1.6]} center>
+        <div className="enhanced-text" style={{ transform: `scale(${isMobile ? 1.0 : 1.15})` }}>
           <div className="machine-name-enhanced">{machine.name}</div>
           <div className="temp-enhanced">{machine.temp.toFixed(1)}°C</div>
           <div className={`status-enhanced ${machine.status.toLowerCase()}`}>
@@ -677,24 +677,43 @@ const Machine3D = ({ machine, isSelected, onClick }: { machine: Machine; isSelec
 // Data Streams (removed from scene for performance)
 // const DataStreams = () => null;
 
+// Responsive helper
+const useIsMobile = () => {
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 640px)');
+    const onChange = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    setIsMobile(mq.matches);
+    mq.addEventListener('change', onChange);
+    return () => mq.removeEventListener('change', onChange);
+  }, []);
+  return isMobile;
+};
+
 // 3D Scene Component
 const Scene3D = ({ machines, selectedMachine, onMachineSelect }: {
   machines: Machine[];
   selectedMachine: string | null;
   onMachineSelect: (id: string) => void;
 }) => {
+  const isMobile = useIsMobile();
+  const cameraSettings = isMobile
+    ? { position: [0, 12, 26] as [number, number, number], fov: 62 }
+    : { position: [0, 8, 14] as [number, number, number], fov: 40 };
+  const canvasHeight = isMobile ? '70vh' : '90vh';
+  const dprRange = isMobile ? ([1, 1.05] as [number, number]) : ([1, 1.25] as [number, number]);
   return (
     <Canvas
-      camera={{ position: [0, 9, 16], fov: 42 }}
-      dpr={[1, 1.25]}
+      camera={cameraSettings}
+      dpr={dprRange}
       frameloop="demand"
       gl={{ antialias: false, powerPreference: 'high-performance' }}
-      style={{ height: '90vh', background: '#1f2937' }}
+      style={{ height: canvasHeight, background: '#1f2937' }}
     >
       <Suspense fallback={null}>
         {/* Simplified Lighting for performance */}
-        <ambientLight intensity={0.7} />
-        <directionalLight position={[10, 10, 5]} intensity={0.7} color="#ffffff" />
+        <ambientLight intensity={isMobile ? 0.9 : 0.7} />
+        <directionalLight position={[10, 10, 5]} intensity={isMobile ? 0.6 : 0.7} color="#ffffff" />
         
         {/* Ground Plane (neutral gray, matte) */}
         <mesh position={[0, -2, 0]} rotation={[-Math.PI / 2, 0, 0]}>
@@ -714,9 +733,16 @@ const Scene3D = ({ machines, selectedMachine, onMachineSelect }: {
         {machines.map((machine) => (
           <Machine3D
             key={machine.id}
-            machine={machine}
+            machine={{
+              ...machine,
+              position: isMobile
+                ? (machine.id === 'M-A' ? [8, 0, 0] : machine.id === 'M-B' ? [-8, 0, 0] : [0, 0, 8])
+                : machine.position,
+              scale: isMobile ? [0.95, 0.95, 0.95] : machine.scale,
+            }}
             isSelected={selectedMachine === machine.id}
             onClick={() => onMachineSelect(machine.id)}
+            isMobile={isMobile}
           />
         ))}
 

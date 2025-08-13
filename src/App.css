@@ -1120,6 +1120,30 @@
   }
 }
 
+/* Mobile adjustments */
+@media (max-width: 640px) {
+  .dashboard-container {
+    padding: 1rem;
+  }
+  .dashboard-title {
+    font-size: 1.5rem;
+  }
+  .dashboard-subtitle {
+    font-size: 0.9rem;
+  }
+  .machines-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .enhanced-text {
+    min-width: 120px;
+    padding: 0.5rem 0.75rem;
+  }
+}
+
 /* Loading animation for 3D scene */
 .scene-container::before {
   content: 'Loading 3D Environment...';
