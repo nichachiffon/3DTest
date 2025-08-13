@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, Suspense } from 'react';
+import { useState, useEffect, useRef, Suspense, type TouchEvent as ReactTouchEvent } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Html } from '@react-three/drei';
 import { AlertTriangle, Activity, Thermometer, Settings, Download, RotateCcw, Play, Pause, Wifi, WifiOff } from 'lucide-react';
@@ -691,14 +691,15 @@ const useIsMobile = () => {
 };
 
 // 3D Scene Component
-const Scene3D = ({ machines, selectedMachine, onMachineSelect }: {
+const Scene3D = ({ machines, selectedMachine, onMachineSelect, visibleIndex }: {
   machines: Machine[];
   selectedMachine: string | null;
   onMachineSelect: (id: string) => void;
+  visibleIndex?: number;
 }) => {
   const isMobile = useIsMobile();
   const cameraSettings = isMobile
-    ? { position: [0, 12, 26] as [number, number, number], fov: 62 }
+    ? { position: [0, 14, 28] as [number, number, number], fov: 70 }
     : { position: [0, 8, 14] as [number, number, number], fov: 40 };
   const canvasHeight = isMobile ? '70vh' : '90vh';
   const dprRange = isMobile ? ([1, 1.05] as [number, number]) : ([1, 1.25] as [number, number]);
@@ -730,14 +731,12 @@ const Scene3D = ({ machines, selectedMachine, onMachineSelect }: {
         {/* Minimal scene: no extra effects */}
 
         {/* Machines */}
-        {machines.map((machine) => (
+        {(isMobile && typeof visibleIndex === 'number' ? [machines[visibleIndex]] : machines).map((machine) => (
           <Machine3D
             key={machine.id}
             machine={{
               ...machine,
-              position: isMobile
-                ? (machine.id === 'M-A' ? [8, 0, 0] : machine.id === 'M-B' ? [-8, 0, 0] : [0, 0, 8])
-                : machine.position,
+              position: isMobile ? [0, 0, 0] : machine.position,
               scale: isMobile ? [0.95, 0.95, 0.95] : machine.scale,
             }}
             isSelected={selectedMachine === machine.id}
@@ -793,6 +792,37 @@ const FactoryDashboard = () => {
       scale: [1.1, 1.1, 1.1]
     }
   ]);
+  const isMobile = useIsMobile();
+  const [visibleIndex, setVisibleIndex] = useState(2);
+  const touchStartXRef = useRef<number | null>(null);
+  const touchDeltaXRef = useRef<number>(0);
+
+  useEffect(() => {
+    if (!isMobile) return;
+    if (visibleIndex < 0 || visibleIndex >= machines.length) {
+      setVisibleIndex((prev) => Math.min(Math.max(prev, 0), machines.length - 1));
+    }
+  }, [isMobile, visibleIndex, machines.length]);
+
+  const goPrev = () => setVisibleIndex((i) => (i - 1 + machines.length) % machines.length);
+  const goNext = () => setVisibleIndex((i) => (i + 1) % machines.length);
+
+  const onTouchStart = (e: ReactTouchEvent<HTMLDivElement>) => {
+    touchStartXRef.current = e.touches[0].clientX;
+    touchDeltaXRef.current = 0;
+  };
+  const onTouchMove = (e: ReactTouchEvent<HTMLDivElement>) => {
+    if (touchStartXRef.current == null) return;
+    touchDeltaXRef.current = e.touches[0].clientX - touchStartXRef.current;
+  };
+  const onTouchEnd = () => {
+    const delta = touchDeltaXRef.current;
+    touchStartXRef.current = null;
+    touchDeltaXRef.current = 0;
+    const threshold = 40;
+    if (Math.abs(delta) < threshold) return;
+    if (delta < 0) goNext(); else goPrev();
+  };
   
   const [isConnected, setIsConnected] = useState(false);
   const [isSimulating, setIsSimulating] = useState(true);
@@ -1106,12 +1136,33 @@ const FactoryDashboard = () => {
         )}
 
         {/* 3D Scene */}
-        <div className="scene-container">
+        <div 
+          className="scene-container"
+          onTouchStart={onTouchStart}
+          onTouchMove={onTouchMove}
+          onTouchEnd={onTouchEnd}
+        >
           <Scene3D 
             machines={machines}
             selectedMachine={selectedMachine}
             onMachineSelect={setSelectedMachine}
+            visibleIndex={isMobile ? visibleIndex : undefined}
           />
+          {isMobile && (
+            <>
+              <button className="carousel-arrow left" onClick={goPrev} aria-label="Previous">
+                ‹
+              </button>
+              <button className="carousel-arrow right" onClick={goNext} aria-label="Next">
+                ›
+              </button>
+              <div className="carousel-dots">
+                {machines.map((_, i) => (
+                  <span key={i} className={`dot ${i === visibleIndex ? 'active' : ''}`}></span>
+                ))}
+              </div>
+            </>
+          )}
         </div>
 
         {/* Stats Overview */}

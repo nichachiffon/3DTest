@@ -371,6 +371,7 @@
   backdrop-filter: blur(25px);
   background: linear-gradient(135deg, rgba(15, 23, 42, 0.9), rgba(30, 58, 138, 0.9));
   transition: all 0.3s ease;
+  position: relative;
 }
 
 .scene-container:hover {
@@ -1180,4 +1181,38 @@
 
 .scene-container canvas:hover {
   filter: brightness(1.1) contrast(1.1);
+}
+
+/* Carousel controls shown on mobile */
+.carousel-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  padding: 0.25rem 0.6rem;
+  border-radius: 9999px;
+  z-index: 5;
+}
+.carousel-arrow.left { left: 0.5rem; }
+.carousel-arrow.right { right: 0.5rem; }
+
+.carousel-dots {
+  position: absolute;
+  bottom: 0.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 0.4rem;
+  z-index: 5;
+}
+.carousel-dots .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.4);
+}
+.carousel-dots .dot.active {
+  background: #60a5fa;
 }
