@@ -611,7 +611,7 @@ const Machine3D = ({ machine, isSelected, onClick, isMobile = false }: { machine
       {renderMachine()}
 
       {/* Enhanced Status Indicator */}
-        <mesh position={[0, isMobile ? 2.6 : 3.2, 0]}>
+        <mesh position={[isMobile ? -2.6 : 0, isMobile ? 2.4 : 3.2, isMobile ? 0.2 : 0]}>
           <sphereGeometry args={[0.18, 20, 20]} />
         <meshStandardMaterial 
           color={getMachineColor()} 
@@ -621,8 +621,8 @@ const Machine3D = ({ machine, isSelected, onClick, isMobile = false }: { machine
       </mesh>
 
       {/* Status Ring */}
-        <mesh position={[0, isMobile ? 2.6 : 3.2, 0]}>
-          <ringGeometry args={[isMobile ? 0.22 : 0.24, isMobile ? 0.32 : 0.36, 20]} />
+        <mesh position={[isMobile ? -2.6 : 0, isMobile ? 2.4 : 3.2, isMobile ? 0.2 : 0]}>
+          <ringGeometry args={[isMobile ? 0.22 : 0.24, isMobile ? 0.34 : 0.36, 20]} />
         <meshStandardMaterial 
           color={getMachineColor()} 
           emissive={getMachineEmissive()} 
@@ -633,8 +633,8 @@ const Machine3D = ({ machine, isSelected, onClick, isMobile = false }: { machine
       </mesh>
 
       {/* Enhanced Text Display */}
-      <Html position={[0, isMobile ? 3.2 : 4.2, isMobile ? 1.2 : 1.6]} center>
-        <div className="enhanced-text" style={{ transform: `scale(${isMobile ? 1.0 : 1.15})` }}>
+      <Html position={[isMobile ? 2.6 : 0, isMobile ? 4.4 : 4.2, isMobile ? 0.4 : 1.6]} center>
+        <div className="enhanced-text" style={{ transform: `scale(${isMobile ? 0.95 : 1.15})` }}>
           <div className="machine-name-enhanced">{machine.name}</div>
           <div className="temp-enhanced">{machine.temp.toFixed(1)}°C</div>
           <div className={`status-enhanced ${machine.status.toLowerCase()}`}>
@@ -701,7 +701,7 @@ const Scene3D = ({ machines, selectedMachine, onMachineSelect, visibleIndex }: {
   const cameraSettings = isMobile
     ? { position: [0, 10, 20] as [number, number, number], fov: 50 }
     : { position: [0, 8, 14] as [number, number, number], fov: 40 };
-  const canvasHeight = isMobile ? '70vh' : '90vh';
+  const canvasHeight = isMobile ? '78vh' : '90vh';
   const dprRange = isMobile ? ([1, 1.05] as [number, number]) : ([1, 1.25] as [number, number]);
   const safeIndex = Math.min(Math.max((visibleIndex ?? 0), 0), Math.max(machines.length - 1, 0));
   const mobileMachines = [machines[safeIndex]].filter(Boolean) as Machine[];
@@ -738,8 +738,8 @@ const Scene3D = ({ machines, selectedMachine, onMachineSelect, visibleIndex }: {
             key={machine.id}
             machine={{
               ...machine,
-              position: isMobile ? [0, 0.3, 0] : machine.position,
-              scale: isMobile ? [1.15, 1.15, 1.15] : machine.scale,
+              position: isMobile ? [0, 0.5, 0] : machine.position,
+              scale: isMobile ? [1.35, 1.35, 1.35] : machine.scale,
             }}
             isSelected={selectedMachine === machine.id}
             onClick={() => onMachineSelect(machine.id)}
@@ -789,7 +789,7 @@ const FactoryDashboard = () => {
       status: 'OK', 
       type: 'assembly', 
       lastUpdate: new Date(),
-      position: [0, 0.5, 5],
+      position: [0, 0.3, 3],
       rotation: [0, 0, 0],
       scale: [1.1, 1.1, 1.1]
     }
