@@ -1069,7 +1069,7 @@ const FactoryDashboard = () => {
         <div className="dashboard-header">
           <div>
             <h1 className="dashboard-title">
-              🏭 ADVANCED 3D FACTORY DASHBOARD
+              3D FACTORY DASHBOARD
             </h1>
             <p className="dashboard-subtitle">Neural Network Powered Industrial Control System</p>
           </div>
